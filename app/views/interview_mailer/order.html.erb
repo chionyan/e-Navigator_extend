@@ -9,9 +9,9 @@
     <p>お世話になっております。e-Navigatorです。</p>
     <p><b><%= @interviewee.username %></b>様から面接日程承認依頼が届いております。</p>
     <% if @interviewee.approvaldate %>
-        <p>面接日程を<b><%= @approvaldate %></b>から変更される場合は、<br>
+        <p>面接日程を<b><%= @interviewee.approvaldate %></b>から変更される場合は、<br>
     <% end %>
-    </p><a href=<%= @interviewee_url %>><%= @interviewee.username %>の面接一覧</a>
+    </p><a href=<%= @interviewee.interviews_url %>><%= @interviewee.username %>様の面接一覧</a>
     から面接日程の承認をお願いします。</p>
     <p>何卒よろしくお願いします。</p>
     <br>

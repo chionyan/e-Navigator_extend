@@ -1,6 +1,7 @@
 class InterviewsController < ApplicationController
   before_action :set_user, only: [:index, :new, :create, :order]
   before_action :set_interview, only: [:show, :edit, :update, :destroy]
+  around_action :update_branch, only: [:update]
 
   def index
     @users = User.where.not(id: current_user.id)
@@ -33,22 +34,12 @@ class InterviewsController < ApplicationController
   end
 
   def update
-    if @user != current_user
-      @interviews.update_all("interview_status='却下'")
-    end
-
     if @interview.update(interview_params)
       flash[:success] = '面接が更新されました'
       redirect_to user_interview_path(@user, @interview)
     else
       flash.now[:danger] = '面接が更新されませんでした'
       render :edit
-    end
-
-    if @user != current_user
-      @interviewee = @user
-      @interviewer = current_user
-      InterviewMailer.apply(@interviewee, @interviewer).deliver
     end
   end
 
@@ -58,13 +49,11 @@ class InterviewsController < ApplicationController
     redirect_to user_interviews_path(@user)
   end
 
-
   def order
-    @interviewee = @user
-    @interviewer = User.find(params[:interviewer_id])
-    if InterviewMailer.order(@interviewee, @interviewer).deliver
+    interviewer = User.find(params[:interviewer_id])
+    if InterviewMailer.order(interviewee: @user, interviewer: interviewer).deliver
       flash[:success] = '申請が完了しました'
-      redirect_to user_interviews_path(@interviewee)
+      redirect_to user_interviews_path(@user)
     else
       flash.now[:danger] = '申請に失敗しました'
       render :index
@@ -72,6 +61,16 @@ class InterviewsController < ApplicationController
   end
 
   private
+
+  def update_branch
+    if @user == current_user
+      yield
+    else
+      @interviews.update_all("interview_status='却下'")
+      yield
+      InterviewMailer.apply(interviewee: @user, interviewer: current_user).deliver
+    end
+  end
 
   def set_user
     @user = User.find(params[:user_id])

@@ -2,7 +2,10 @@
 
 お世話になっております。e-Navigatorです。
 <%= @interviewee.username %>様から面接日程承認依頼が届いております。
-<%= @interviewee_url %>から面接日程の承認をお願いします。
+<% if @interviewee.approvaldate %>
+面接日程を<b><%= @interviewee.approvaldate %>から変更される場合は、
+<% end %>
+<%= @interviewee.interviews_url %>から面接日程の承認をお願いします。
 何卒よろしくお願いします。
 
 ========================================

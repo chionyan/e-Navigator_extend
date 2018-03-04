@@ -24,5 +24,11 @@ class User < ApplicationRecord
       nil
     end
   end
+
+  def interviews_url
+    root = "https://e-navigator-chionyan.herokuapp.com/"
+    user_interviews_url = Rails.application.routes.url_helpers.user_interviews_path(self)
+    root + user_interviews_url.slice(1..user_interviews_url.length)
+  end
   
 end
