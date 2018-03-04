@@ -1,5 +1,5 @@
 class InterviewsController < ApplicationController
-  before_action :set_user, only: [:index, :new, :create, :order]
+  before_action :set_user, only: [:index, :new, :create, :order, :cancel]
   before_action :set_interview, only: [:show, :edit, :update, :destroy]
   around_action :update_branch, only: [:update]
 
@@ -60,6 +60,16 @@ class InterviewsController < ApplicationController
     end
   end
 
+  def cancel
+    if @interviews.update_all("interview_status='保留'")
+      flash[:success] = '承認状態を解除しました'
+      redirect_to user_interviews_path(@user)
+    else
+      flash.now[:danger] = '承認状態を解除できませんでした'
+      render :index
+    end
+  end
+
   private
 
   def update_branch
@@ -74,6 +84,7 @@ class InterviewsController < ApplicationController
 
   def set_user
     @user = User.find(params[:user_id])
+    @interviews =  @user.interviews
   end
 
   def set_interview  

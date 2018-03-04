@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show] do
     resources :interviews do
       post 'order', on: :collection
+      post 'cancel', on: :collection
     end
   end
 

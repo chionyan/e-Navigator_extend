@@ -1,6 +1,9 @@
 <h3> 現在の面接日程</h3>
 <% if user.approvaldate %>
     <p><strong><%= user.approvaldate %></strong> に面接が設定されています。</p>
+    <%= form_tag(cancel_user_interviews_path, method: "post", class: 'form-inline') do %>
+        <%= submit_tag '承認解除', class: 'btn btn-warning' %>
+    <% end %>
 <% else %>
     <p>面接日程は設定されていません。</p>
 <% end %>
