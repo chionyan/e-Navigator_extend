@@ -7,6 +7,7 @@ class User < ApplicationRecord
   enum sex: { male: 1, female: 2 , other: 3 }
 
   has_many :interviews
+  has_many :messages
 
   def age
     return unless birthdate
