@@ -9,6 +9,14 @@ class User < ApplicationRecord
   has_many :interviews
   has_many :messages
 
+  def other_users
+    User.where.not(id: id)
+  end
+
+  def conversations(receiver)
+    messages.where(receiver_id: receiver)
+  end
+
   def age
     return unless birthdate
 

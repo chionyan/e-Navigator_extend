@@ -1,0 +1,20 @@
+<h1>メッセージ一覧</h1>
+
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>最新メッセージ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @receivers.each do |receiver| %>
+    <tr>
+      <td><div class="text-center"><%= receiver.username %></div></td>
+      <td><div class="text-center">
+        <%= link_to receiver.messages.last.short_content, user_receiver_room_path(current_user, receiver) %>
+      </div></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

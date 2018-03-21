@@ -17,10 +17,10 @@ class MessagesController < ApplicationController
       @message = @user.messages.build(message_params)
       if @message.save
         flash[:success] = 'メッセージが作成されました'
-        redirect_to user_message_path(@user, @message)
+        redirect_to user_receiver_room_path(@user, @message.receiver_id)
       else
         flash.now[:danger] = 'メッセージが作成されませんでした'
-        render :new
+        render user_receiver_room_path(@user, @message.receiver_id)
       end
     end
   
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
     def update
       if @message.update(message_params)
         flash[:success] = 'メッセージが更新されました'
-        redirect_to user_message_path(@user, @message)
+        redirect_to user_receiver_room_path(@user, @message.receiver_id)
       else
         flash.now[:danger] = 'メッセージが更新されませんでした'
         render :edit
@@ -40,7 +40,7 @@ class MessagesController < ApplicationController
     def destroy
       @message.destroy
       flash[:success] = 'メッセージが削除されました'
-      redirect_to user_messages_path(@user)
+      redirect_to user_receiver_room_path(@user, @message.receiver_id)
     end
   
     private
@@ -57,6 +57,6 @@ class MessagesController < ApplicationController
     end
   
     def message_params
-      params.fetch(:message, {}).permit(:content)
+      params.fetch(:message, {}).permit(:content, :user_id, :receiver_id)
     end
 end

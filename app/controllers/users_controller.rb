@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
     def index
         if current_user
-            @users = User.where.not(id: current_user.id)
+            @users = current_user.other_users
         end
     end
 

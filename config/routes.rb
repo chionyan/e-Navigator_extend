@@ -14,7 +14,10 @@ Rails.application.routes.draw do
       post 'order', on: :collection
       post 'cancel', on: :collection
     end
-    resources :messages
+    resources :messages, only: [:create, :destroy]
+    resources :receivers, only: [:index] do
+      get 'room'
+    end
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
