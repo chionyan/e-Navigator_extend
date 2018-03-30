@@ -1,0 +1,2 @@
+class Receiver < User
+end

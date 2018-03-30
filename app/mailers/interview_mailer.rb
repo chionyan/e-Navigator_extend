@@ -12,13 +12,13 @@ class InterviewMailer < ApplicationMailer
   def apply(interviewee:, interviewer:)
     @interviewee = interviewee
     @interviewer = interviewer
-    mail(to: @interviewee.email + "," + @interviewer.email, subject: '面接日程承認のお知らせ')
+    mail to: [@interviewee.email, @interviewer.email], subject: '面接日程承認のお知らせ'
   end
 
   def order(interviewee:, interviewer:)
     @interviewee = interviewee
     @interviewer = interviewer
-    mail(to: @interviewer.email, subject: '面接日程承認依頼のお知らせ')
+    mail to: @interviewer.email, subject: '面接日程承認依頼のお知らせ'
   end
 
 end

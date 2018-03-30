@@ -15,7 +15,7 @@
                 <% if user_signed_in? %>
                     <li><%= link_to 'プロフィール', edit_user_registration_path %></li>
                     <li><%= link_to '自分の面接一覧', current_user %></li>
-                    <li><%= link_to 'メール', "#" %></li>
+                    <li><%= link_to 'メッセージ一覧', user_messages_path(current_user) %></li>
                     <li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
                 <% else %>
                     <li><%= link_to 'サインアップ', new_user_registration_path %></li>
