@@ -1,0 +1,30 @@
+<h1><%= @receiver.username %>さんとのメッセージ</h1>
+
+<div class="row">
+    <div class="col-xs-8 bg-info">
+        <div class="messages">
+            <% @messages.each do |message| %>
+                <div class="messages" data-id=<%= message.id %>>
+                <% if message.user_id == @sender.id %>
+                    <%= render :partial => "sender_message", :locals => { message: message } %>
+                <% else %>
+                    <%= render :partial => "receiver_message", :locals => { message: message } %>     
+                <% end %>
+                </div>
+            <% end %>
+        </div>
+        
+        <div class="message_form">
+            <%= form_for([@sender, @message], class: 'form-inline') do |f| %>
+                <div class="form-group">
+                <%= f.hidden_field :user_id, value: @sender.id %>
+                <%= f.hidden_field :receiver_id, value: @receiver.id %>
+                <%= f.text_field :content, class: 'form-control' %>
+                <%= f.submit '投稿', class: 'btn btn-primary' %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<%= link_to '一覧に戻る', user_messages_path(@sender) %>

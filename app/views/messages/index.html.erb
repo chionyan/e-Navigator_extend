@@ -12,7 +12,7 @@
     <tr>
       <td><div class="text-center"><%= receiver.username %></div></td>
       <td><div class="text-center">
-        <%= link_to receiver.messages.last.short_content, user_receiver_room_path(current_user, receiver) %>
+        <%= link_to receiver.messages.last.short_content, room_user_message_path(current_user, receiver) %>
       </div></td>
     </tr>
     <% end %>

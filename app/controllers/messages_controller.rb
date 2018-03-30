@@ -1,26 +1,24 @@
 class MessagesController < ApplicationController
-    before_action :set_user, only: [:index, :new, :create]
-    before_action :set_message, only: [:show, :edit, :update, :destroy]
+    before_action :set_users, only: [:index, :new, :create]
+    before_action :set_message, only: [:edit, :update, :destroy]
+    before_action :set_messages, only: [:room]
   
     def index
-      @users = User.where.not(id: current_user.id)
-    end
-  
-    def show
+      @receivers = @sender.other_users
     end
   
     def new
-      @message = @user.messages.build
+      @message = @sender.messages.build
     end
   
     def create
-      @message = @user.messages.build(message_params)
+      @message = @sender.messages.build(message_params)
       if @message.save
         flash[:success] = 'メッセージが作成されました'
-        redirect_to user_receiver_room_path(@user, @message.receiver_id)
+        redirect_to room_user_message_path(@sender, @receiver)
       else
         flash.now[:danger] = 'メッセージが作成されませんでした'
-        render user_receiver_room_path(@user, @message.receiver_id)
+        render room_user_message_path(@sender, @receiver)
       end
     end
   
@@ -30,7 +28,7 @@ class MessagesController < ApplicationController
     def update
       if @message.update(message_params)
         flash[:success] = 'メッセージが更新されました'
-        redirect_to user_receiver_room_path(@user, @message.receiver_id)
+        redirect_to room_user_message_path(@sender, @receiver)
       else
         flash.now[:danger] = 'メッセージが更新されませんでした'
         render :edit
@@ -40,20 +38,34 @@ class MessagesController < ApplicationController
     def destroy
       @message.destroy
       flash[:success] = 'メッセージが削除されました'
-      redirect_to user_receiver_room_path(@user, @message.receiver_id)
+      redirect_to room_user_message_path(@sender, @receiver)
+    end
+
+    def room
+      @messages = @sender_messages.or(@receiver_messages).order("created_at ASC")
+      @message = @sender.messages.build
     end
   
     private
   
-    def set_user
-      @user = User.find(params[:user_id])
-      @messages =  @user.interviews
+    def set_users
+      @sender = User.find(params[:user_id])
+      if params[:receiver_id]  
+        @receiver = Receiver.find(params[:receiver_id])
+      elsif params[:message]
+        @receiver = Receiver.find(params[:message][:receiver_id])
+      end
     end
-  
+
     def set_message
+      set_users
       @message = Message.find(params[:id])
-      @user = @message.user
-      @messages =  @user.messages
+    end
+
+    def set_messages
+      set_users
+      @sender_messages = @sender.conversations(@receiver)
+      @receiver_messages = @receiver.conversations(@sender)
     end
   
     def message_params
